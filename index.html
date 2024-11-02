@@ -87,7 +87,7 @@
         var sphereBodies = [];
         for (var i = 0; i < 1000; i++) {
             // 创建球体几何体和材质
-            var geometry = new THREE.SphereGeometry(0.15, 32, 32);
+            var geometry = new THREE.SphereGeometry(0.2, 32, 32);
             var material = new THREE.MeshBasicMaterial({ map: texture, color: 0xffff00 });
             var sphere = new THREE.Mesh(geometry, material);
             scene.add(sphere);

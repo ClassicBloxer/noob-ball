@@ -9,19 +9,9 @@
     <style>
         body { margin: 0; }
         canvas { display: block; }
-        #fullscreen-message {
-            display: none;
-            font-size: 24px;
-            color: #333;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
     </style>
 </head>
 <body>
-    <div id="fullscreen-message">點擊螢幕以進入全螢幕模式</div>
     <script>
         function requestFullscreen() {
             const elem = document.documentElement;
@@ -38,145 +28,6 @@
 
         document.addEventListener('DOMContentLoaded', (event) => {
             requestFullscreen();
-            setTimeout(() => {
-                if (!document.fullscreenElement) {
-                    document.getElementById('fullscreen-message').style.display = 'block';
-                }
-            }, 1000);
-        });
-
-        document.addEventListener('click', () => {
-            if (!document.fullscreenElement) {
-                requestFullscreen();
-            }
-        });
-
-        // 创建场景
-        var scene = new THREE.Scene();
-        var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-
-        // 创建渲染器
-        var renderer = new THREE.WebGLRenderer();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        document.body.appendChild(renderer.domElement);
-
-        // 加载纹理
-        var textureLoader = new THREE.TextureLoader();
-        var texture = textureLoader.load('https://i.ibb.co/VTv2jTv/IMG-20241102-144441.png');
-
-        // 创建物理世界
-        var world = new CANNON.World();
-        world.gravity.set(0, -9.82, 0);
-
-        // 创建地面
-        var groundShape = new CANNON.Plane();
-        var groundBody = new CANNON.Body({ mass: 0 });
-        groundBody.addShape(groundShape);
-        groundBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
-        world.addBody(groundBody);
-
-        // 创建镜头碰撞体
-        var cameraShape = new CANNON.Plane();
-        var cameraBody = new CANNON.Body({ mass: 0 });
-        cameraBody.addShape(cameraShape);
-        cameraBody.position.set(0, 0, 5);
-        cameraBody.quaternion.setFromEuler(0, Math.PI, 0);
-        world.addBody(cameraBody);
-
-        // 创建小球
-        var spheres = [];
-        var sphereBodies = [];
-        for (var i = 0; i < 1000; i++) {
-            // 创建球体几何体和材质
-            var geometry = new THREE.SphereGeometry(0.2, 32, 32);
-            var material = new THREE.MeshBasicMaterial({ map: texture, color: 0xffff00 });
-            var sphere = new THREE.Mesh(geometry, material);
-            scene.add(sphere);
-            spheres.push(sphere);
-
-            // 创建球体物理体
-            var sphereShape = new CANNON.Sphere(0.2);
-            var sphereBody = new CANNON.Body({ mass: 1 });
-            sphereBody.addShape(sphereShape);
-            sphereBody.position.set(Math.random() * 2 - 1, 5 + Math.random() * 5, Math.random() * 2 - 1);
-            sphereBody.velocity.set(0, 0, 0); // 给球一个初始速度，朝向镜头方向
-            world.addBody(sphereBody);
-
-            sphereBodies.push(sphereBody);
-        }
-
-        // 设置相机位置和角度
-        camera.position.z = 5;
-        camera.position.y = 2; // 提高相机位置
-        camera.rotation.x = -0.5; // 向下看
-
-        // 动画函数
-        function animate() {
-            requestAnimationFrame(animate);
-
-            // 更新物理世界
-            world.step(1 / 60);
-
-            // 更新球体位置
-            for (var i = 0; i < spheres.length; i++) {
-                var sphere = spheres[i];
-                var sphereBody = sphereBodies[i];
-                sphere.position.copy(sphereBody.position);
-                sphere.quaternion.copy(sphereBody.quaternion);
-            }
-
-            renderer.render(scene, camera);
-        }
-
-        animate();
-    </script>
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="zh-TW">
-<head>
-    <meta charset="UTF-8">
-    <title>noob ball</title>
-    <link rel="icon" href="https://i.ibb.co/VTv2jTv/IMG-20241102-144441.png" type="image/x-icon">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/cannon.js/0.6.2/cannon.min.js"></script>
-    <style>
-        body { margin: 0; }
-        canvas { display: block; }
-        #fullscreen-message {
-            display: none;
-            font-size: 24px;
-            color: #333;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-    </style>
-</head>
-<body>
-    <div id="fullscreen-message">點擊螢幕以進入全螢幕模式</div>
-    <script>
-        function requestFullscreen() {
-            const elem = document.documentElement;
-            if (elem.requestFullscreen) {
-                elem.requestFullscreen();
-            } else if (elem.mozRequestFullScreen) { // Firefox
-                elem.mozRequestFullScreen();
-            } else if (elem.webkitRequestFullscreen) { // Chrome, Safari and Opera
-                elem.webkitRequestFullscreen();
-            } else if (elem.msRequestFullscreen) { // IE/Edge
-                elem.msRequestFullscreen();
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', (event) => {
-            requestFullscreen();
-            setTimeout(() => {
-                if (!document.fullscreenElement) {
-                    document.getElementById('fullscreen-message').style.display = 'block';
-                }
-            }, 1000);
         });
 
         document.addEventListener('click', () => {

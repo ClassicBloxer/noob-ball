@@ -26,13 +26,21 @@
             }
         }
 
+        function hideUI() {
+            if (window.AndroidFullScreen) {
+                window.AndroidFullScreen.immersiveMode();
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', (event) => {
             requestFullscreen();
+            hideUI();
         });
 
         document.addEventListener('click', () => {
             if (!document.fullscreenElement) {
                 requestFullscreen();
+                hideUI();
             }
         });
 

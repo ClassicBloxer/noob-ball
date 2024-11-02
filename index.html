@@ -27,22 +27,28 @@
         }
 
         function hideUI() {
-            if (window.AndroidFullScreen) {
-                window.AndroidFullScreen.immersiveMode();
-            }
+            document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
+            document.body.style.height = 'calc(var(--vh, 1vh) * 100)';
+            document.body.style.overflow = 'hidden';
+            document.documentElement.style.overflow = 'hidden';
+            document.documentElement.style.height = '100%';
+            document.documentElement.style.width = '100%';
+            document.documentElement.style.position = 'fixed';
+            document.documentElement.style.top = '0';
+            document.documentElement.style.left = '0';
         }
 
         document.addEventListener('DOMContentLoaded', (event) => {
-            requestFullscreen();
             hideUI();
         });
 
         document.addEventListener('click', () => {
             if (!document.fullscreenElement) {
                 requestFullscreen();
-                hideUI();
             }
         });
+
+        window.addEventListener('resize', hideUI);
 
         // 创建场景
         var scene = new THREE.Scene();
@@ -81,7 +87,7 @@
         var sphereBodies = [];
         for (var i = 0; i < 1000; i++) {
             // 创建球体几何体和材质
-            var geometry = new THREE.SphereGeometry(0.2, 32, 32);
+            var geometry = new THREE.SphereGeometry(0.15, 32, 32);
             var material = new THREE.MeshBasicMaterial({ map: texture, color: 0xffff00 });
             var sphere = new THREE.Mesh(geometry, material);
             scene.add(sphere);
